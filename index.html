@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bank Simulator</title>
+    <style>
+        /* General Styles */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f9;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 450px;
+            margin: auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Form Styles */
+        form {
+            display: none;
+        }
+
+        form.active {
+            display: block;
+        }
+
+        h2 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 20px;
+            font-size: 24px;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        label {
+            display: block;
+            font-size: 14px;
+            margin-bottom: 5px;
+            color: #555;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 10px;
+            font-size: 14px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+
+        input:focus, select:focus {
+            border-color: #007bff;
+            outline: none;
+        }
+
+        button {
+            width: 100%;
+            background-color: #007bff;
+            color: #fff;
+            font-size: 16px;
+            padding: 10px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        /* Messages and Links */
+        .message {
+            font-size: 14px;
+            color: #333;
+            text-align: center;
+            margin-top: 10px;
+        }
+
+        .toggle-link {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .toggle-link a {
+            color: #007bff;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .toggle-link a:hover {
+            text-decoration: underline;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            h2 {
+                font-size: 20px;
+            }
+
+            .form-group {
+                margin-bottom: 12px;
+            }
+
+            input, select, button {
+                font-size: 16px;
+            }
+
+            button {
+                padding: 12px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                padding: 15px;
+            }
+
+            h2 {
+                font-size: 18px;
+            }
+
+            input, select, button {
+                font-size: 14px;
+                padding: 8px;
+            }
+
+            button {
+                padding: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Login Form -->
+        <form id="loginForm" class="active">
+            <h2>Login</h2>
+            <div class="form-group">
+                <label for="loginPin">Enter 4-digit PIN:</label>
+                <input type="password" id="loginPin" maxlength="4" placeholder="4-digit PIN" required>
+            </div>
+            <button type="button" id="loginBtn">Login</button>
+            <p class="message" id="login-message"></p>
+            <div class="toggle-link">
+                <p>If you don't have an account, <a href="#" id="showRegister">Register Here</a></p>
+            </div>
+        </form>
+
+        <!-- Security Question Form -->
+        <form id="securityForm">
+            <h2>Security Verification</h2>
+            <div class="form-group">
+                <label id="securityQuestionLabel">Security Question:</label>
+                <input type="text" id="securityAnswer" placeholder="Answer the question" required>
+            </div>
+            <button type="button" id="verifyBtn">Verify</button>
+            <p class="message" id="security-message"></p>
+        </form>
+
+        <!-- Registration Form -->
+        <form id="registerForm">
+            <h2>Register</h2>
+            <div class="form-group">
+                <label for="account">Last 5 digits of your bank account:</label>
+                <input type="text" id="account" maxlength="5" placeholder="e.g., 12345" required>
+            </div>
+            <div class="form-group">
+                <label for="pin">Set 4-digit PIN:</label>
+                <input type="password" id="pin" maxlength="4" placeholder="4-digit PIN" required>
+            </div>
+            <div class="form-group">
+                <label for="question">Select a Security Question:</label>
+                <select id="question" required>
+                    <option value="" disabled selected>Select a question</option>
+                    <option value="Your first pet's name?">Your first pet's name?</option>
+                    <option value="Your favorite teacher's name?">Your favorite teacher's name?</option>
+                    <option value="Your hometown?">Your hometown?</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="answer">Answer:</label>
+                <input type="text" id="answer" placeholder="Answer" required>
+            </div>
+            <button type="submit">Register</button>
+            <p class="message" id="register-message"></p>
+            <div class="toggle-link">
+                <p>Already have an account? <a href="#" id="showLogin">Login Here</a></p>
+            </div>
+        </form>
+    </div>
+
+    <script>
+        // Form References
+        const loginForm = document.getElementById('loginForm');
+        const registerForm = document.getElementById('registerForm');
+        const securityForm = document.getElementById('securityForm');
+
+        // Toggle Links
+        document.getElementById('showRegister').addEventListener('click', function (e) {
+            e.preventDefault();
+            loginForm.classList.remove('active');
+            registerForm.classList.add('active');
+        });
+
+        document.getElementById('showLogin').addEventListener('click', function (e) {
+            e.preventDefault();
+            registerForm.classList.remove('active');
+            loginForm.classList.add('active');
+        });
+
+        // Registration Form Submission
+        registerForm.addEventListener('submit', function (e) {
+            e.preventDefault();
+
+            const account = document.getElementById('account').value.trim();
+            const pin = document.getElementById('pin').value.trim();
+            const question = document.getElementById('question').value;
+            const answer = document.getElementById('answer').value.trim();
+
+            if (account.length !== 5 || isNaN(account)) {
+                document.getElementById('register-message').textContent = 'Invalid account number.';
+                return;
+            }
+
+            const user = { account, pin, question, answer: answer.toLowerCase() };
+            localStorage.setItem('registeredUser', JSON.stringify(user));
+            document.getElementById('register-message').textContent = 'Registration successful! Redirecting...';
+
+            setTimeout(() => {
+                registerForm.reset();
+                registerForm.classList.remove('active');
+                loginForm.classList.add('active');
+            }, 1500);
+        });
+
+        // Login Button
+        document.getElementById('loginBtn').addEventListener('click', function () {
+            const pin = document.getElementById('loginPin').value.trim();
+            const user = JSON.parse(localStorage.getItem('registeredUser'));
+
+            if (user && user.pin === pin) {
+                loginForm.classList.remove('active');
+                securityForm.classList.add('active');
+                document.getElementById('securityQuestionLabel').textContent = user.question;
+            } else {
+                document.getElementById('login-message').textContent = 'Invalid PIN.';
+            }
+        });
+
+        // Security Verification
+        document.getElementById('verifyBtn').addEventListener('click', function () {
+            const answer = document.getElementById('securityAnswer').value.trim().toLowerCase();
+            const user = JSON.parse(localStorage.getItem('registeredUser'));
+
+            if (user && user.answer === answer) {
+                document.getElementById('security-message').textContent = 'Login successful! Welcome to your dashboard.';
+            } else {
+                document.getElementById('security-message').textContent = 'Incorrect answer.';
+            }
+        });
+    </script>
+</body>
+</html>
